@@ -40,3 +40,36 @@ def calculate_tour_distance(tour: List[Point]) -> float:
     for i in range(len(tour)):
         total_dist += tour[i].distance_to(tour[(i + 1) % len(tour)])
     return total_dist
+
+def load_cities_from_csv(filepath: str, seed: int = 42) -> List[Point]:
+    """
+    Loads unique PULocationIDs from a CSV file and maps them to simulated coordinates.
+    """
+    import csv
+    
+    unique_ids = set()
+    try:
+        with open(filepath, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if 'PULocationID' in row and row['PULocationID']:
+                    try:
+                        unique_ids.add(int(row['PULocationID']))
+                    except ValueError:
+                        continue
+    except FileNotFoundError:
+        print(f"Error: File {filepath} not found.")
+        return []
+
+    # Generate deterministic coordinates for each unique ID
+    np.random.seed(seed)
+    cities = []
+    sorted_ids = sorted(list(unique_ids))
+    
+    for pid in sorted_ids:
+        # Simulate coordinates in a 1000x1000 grid
+        x = np.random.uniform(0, 1000)
+        y = np.random.uniform(0, 1000)
+        cities.append(Point(pid, x, y))
+        
+    return cities

@@ -1,8 +1,8 @@
 import multiprocessing
 import time
 from typing import List
-from geometry import Point
-from tsp_solver import GeneticAlgorithm, Individual
+from src.geometry import Point
+from src.tsp_solver import GeneticAlgorithm, Individual
 
 def run_island(points: List[Point], generations: int, island_id: int, migration_queue: multiprocessing.Queue, result_queue: multiprocessing.Queue):
     """
@@ -19,17 +19,31 @@ def run_island(points: List[Point], generations: int, island_id: int, migration_
             ga.run_local_search()
             best_ind = ga.population[0] # Update after LS
 
+        # Log Progress
+        if gen % 10 == 0:
+            print(f"[Island {island_id}] Gen {gen}/{generations} | Best: {best_ind.fitness:.2f}", flush=True)
+
         best_fitness_history.append(best_ind.fitness)
         
         # Migration: Every 20 generations
         if gen % 20 == 0:
-            # Send best to manager
+            # Send best to manager/other islands
             migration_queue.put((island_id, best_ind))
             
-            # Check for incoming migrants
-            # In a real distributed system this would be more complex.
-            # Here we simulate by just continuing.
-            pass
+            # Receive migrants
+            import queue
+            try:
+                # Try to get a few migrants (limit to avoid processing entire history)
+                for _ in range(2): 
+                    if not migration_queue.empty():
+                        sender_id, migrant = migration_queue.get_nowait()
+                        if sender_id != island_id:
+                            # Replace worst individual with migrant
+                            # Assuming population is sorted (best first)
+                            ga.population[-1] = migrant
+                            ga.population.sort()
+            except queue.Empty:
+                pass
 
     result_queue.put((island_id, ga.population[0], best_fitness_history))
 

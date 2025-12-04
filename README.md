@@ -2,7 +2,11 @@
 
 ## Problem Definition
 
-The **Traveling Salesman Problem (TSP)** is a classic NP-hard optimization problem where the goal is to find the shortest possible route that visits a given set of cities exactly once and returns to the origin. As the number of cities ($N$) grows, the search space expands factorially ($N!$), making exact methods computationally infeasible for large instances.
+The **Traveling Salesman Problem (TSP)** is a classic NP-hard optimization problem. In this project, we apply TSP to optimize routes for **NYC Taxi Pick-Up Locations**. Using the **TLC Trip Record Data**, we extract unique pick-up zones and calculate the optimal path to visit all of them exactly once. This simulates a scenario where a driver or service needs to visit every active zone efficiently.
+
+## Dataset
+
+The project uses `sample.csv`, a subset of NYC Taxi trip records. Since the dataset provides Zone IDs (`PULocationID`) but not coordinates, we **simulate** the spatial location of each zone deterministically to enable Euclidean distance calculations.
 
 ## Research Hypothesis
 
@@ -44,8 +48,14 @@ The system is built in Python using `multiprocessing` for parallelism.
 
 ### Running the Solver
 
+**Random Cities:**
 ```bash
-python src/main.py --cities 100 --islands 4 --generations 200
+python -m src.main --cities 100 --islands 4 --generations 200
+```
+
+**NYC Taxi Data:**
+```bash
+python -m src.main --file sample.csv --islands 4 --generations 200
 ```
 
 ### Running Benchmarks

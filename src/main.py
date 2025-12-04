@@ -1,20 +1,30 @@
 import argparse
 import time
-from geometry import generate_random_cities
-from parallel_engine import ParallelManager
-from tsp_solver import GeneticAlgorithm
+from src.geometry import generate_random_cities
+from src.parallel_engine import ParallelManager
+from src.tsp_solver import GeneticAlgorithm
 
 def main():
     parser = argparse.ArgumentParser(description="Parallel Evolutionary TSP Solver")
-    parser.add_argument("--cities", type=int, default=2, help="Number of cities")
+    parser.add_argument("--cities", type=int, default=100, help="Number of cities (ignored if --file is used)")
     parser.add_argument("--islands", type=int, default=4, help="Number of parallel islands (cores)")
-    parser.add_argument("--generations", type=int, default=2, help="Generations per island")
+    parser.add_argument("--generations", type=int, default=100, help="Generations per island")
     parser.add_argument("--serial", action="store_true", help="Run in serial mode (single core)")
+    parser.add_argument("--file", type=str, help="Path to CSV file (e.g., sample.csv)")
     
     args = parser.parse_args()
     
-    print(f"Generating {args.cities} random cities...")
-    points = generate_random_cities(args.cities, seed=42)
+    if args.file:
+        print(f"Loading cities from {args.file}...")
+        from src.geometry import load_cities_from_csv
+        points = load_cities_from_csv(args.file)
+        if not points:
+            print("No cities loaded. Exiting.")
+            return
+        print(f"Loaded {len(points)} unique locations.")
+    else:
+        print(f"Generating {args.cities} random cities...")
+        points = generate_random_cities(args.cities, seed=42)
     
     start_time = time.time()
     

@@ -1,8 +1,8 @@
 import random
 import numpy as np
 from typing import List, Tuple
-from geometry import Point, calculate_tour_distance
-from spatial import KDTree
+from src.geometry import Point, calculate_tour_distance
+from src.spatial import KDTree
 
 class Individual:
     def __init__(self, tour: List[Point]):
