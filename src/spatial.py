@@ -1,5 +1,5 @@
 from typing import List, Optional, Tuple
-from src.geometry import Point
+from geometry import Point
 import math
 
 class KDNode:

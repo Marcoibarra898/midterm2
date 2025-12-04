@@ -1,14 +1,14 @@
 import argparse
 import time
-from src.geometry import generate_random_cities
-from src.parallel_engine import ParallelManager
-from src.tsp_solver import GeneticAlgorithm
+from geometry import generate_random_cities
+from parallel_engine import ParallelManager
+from tsp_solver import GeneticAlgorithm
 
 def main():
     parser = argparse.ArgumentParser(description="Parallel Evolutionary TSP Solver")
-    parser.add_argument("--cities", type=int, default=100, help="Number of cities")
+    parser.add_argument("--cities", type=int, default=2, help="Number of cities")
     parser.add_argument("--islands", type=int, default=4, help="Number of parallel islands (cores)")
-    parser.add_argument("--generations", type=int, default=100, help="Generations per island")
+    parser.add_argument("--generations", type=int, default=2, help="Generations per island")
     parser.add_argument("--serial", action="store_true", help="Run in serial mode (single core)")
     
     args = parser.parse_args()

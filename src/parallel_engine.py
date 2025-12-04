@@ -1,8 +1,8 @@
 import multiprocessing
 import time
 from typing import List
-from src.geometry import Point
-from src.tsp_solver import GeneticAlgorithm, Individual
+from geometry import Point
+from tsp_solver import GeneticAlgorithm, Individual
 
 def run_island(points: List[Point], generations: int, island_id: int, migration_queue: multiprocessing.Queue, result_queue: multiprocessing.Queue):
     """
